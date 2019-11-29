@@ -1,0 +1,80 @@
+
+<style>
+<%- include ../public/stylesheets/menu.css %>
+</style>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+<script type="application/javascript">
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+</script>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+          <a class="navbar-brand" href="/">Shop</a>
+          <button class="navbar-toggler" type="button" >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+              </li>
+            </ul>
+            <div class="mt-2 mt-md-0 navbar-right">
+              <button class="btn btn-secondary my-2 my-sm-0 b1" type="submit"><a id="Button1" href="/cart">Cart</a></button>
+              <button class="btn btn-secondary my-2 my-sm-0 b1" type="submit"><a  id='Button2' href="/">Log Out</a></button>
+            </div>
+          </div>
+          <script type="application/javascript">
+              if (!getCookie('loggedIn')) {
+                  document.getElementById('Button1').innerHTML = 'Log In';
+                  document.getElementById('Button1').href = '/login';
+                  document.getElementById('Button2').innerHTML = 'Register';
+                  document.getElementById('Button2').href = '/register';
+              } else {
+                var newLink = $('#Button1').attr('href') + '?email=' + getCookie('loggedIn');
+                $('#Button1').attr('href', newLink);
+              } 
+              $('#Button2').on('click', function(e){
+                  if ($('#Button2').text() == 'Log Out'){
+                      e.preventDefault();
+                      setCookie('loggedIn',0,0);
+                      setTimeout(function() {
+                        window.location.href = '/';
+                      }, 500);
+                  }
+              });
+          </script>
+  </nav>
+</body>
+      

@@ -1,0 +1,19 @@
+{
+  "name": "App",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "debug": "^4.1.1",
+    "ejs": "*",
+    "express": "3.2.0",
+    "http": "0.0.0",
+    "mongodb": "^3.3.3",
+    "nodemon": "^1.19.4",
+    "path": "^0.12.7",
+    "underscore": "^1.9.1"
+  }
+}

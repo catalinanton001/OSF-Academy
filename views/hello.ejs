@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <%- include header.ejs %>
+    <body>
+        <%- include menu.ejs %>
+        <ol>
+            <% _.each(items, function(topC) { %>
+            <div class="container">
+                <div>
+                    <h1 class="text-center"><%= topC.name %></h1>
+                    <br>
+                    <br>
+                    <p><%= topC.page_description %></p>
+                    <% if (topC.image) { %>
+                    <div>
+                        <img src="/images/<%= topC.image %>">
+                    </div>
+                    <% } %>
+                    <div>
+                        <div>
+                            <% _.each(topC.categories, function(subC) { %>
+                            <div>
+                                <a href="<%= subC.id %>/"><h2><%= subC.name %></h2></a>
+                                <p><%= subC.page_description %></p>
+                                <% if (subC.image) { %>
+                                <div>
+                                    <a href="<%= subC.id %>/"><img src="/images/<%= subC.image %>"></a>
+                                </div>
+                                <% } %>
+                            </dvi>
+                            <% }); %>                    
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            <br>
+            <br>
+            <% }); %>
+        </ol>
+    </body>
+</html>

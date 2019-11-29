@@ -1,0 +1,65 @@
+
+<%- include header.ejs %>
+<style>
+    <%- include ../public/stylesheets/cart.css %>
+</style>
+<%- include menu.ejs %>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<% var total = 0 %>
+<div class="container">
+	<table id="cart" class="table table-hover table-condensed">
+    	<thead>
+			<tr>
+				<th style="width:50%">Product</th>
+				<th style="width:10%">Price</th>
+				<th style="width:8%">Quantity</th>
+				<th style="width:22%" class="text-center">Subtotal</th>
+				<th style="width:10%"></th>
+			</tr>
+        </thead>
+        <% _.each(items, function(topC) { %>
+    		<tbody>
+    			<tr>
+    				<td data-th="Product">
+    					<div class="row">
+    						<div class="col-sm-2 hidden-xs"><img src="<%= topC.img %>"  class="img-responsive"/></div>
+    						<div class="col-sm-10">
+    							<h4 class="nomargin"><%= topC.name %></h4>
+    							<p><%= topC.description %></p>
+    						</div>
+    					</div>
+    				</td>
+    				<td data-th="Price"><%= topC.currency %> <%= topC.price %></td>
+    				<td data-th="Quantity">
+                        <option value="Quantity" class="text-center"><%= topC.quantity %></option>
+    				</td>
+    				<td data-th="Subtotal" class="text-center"><%= topC.price * topC.quantity %></td>
+					<% var buttonAction = '/deleteItem?itemId=' + topC.id + '&email=' + email; %>
+					<td class="actions" data-th="">
+						<button class="btn btn-danger btn-sm deleteButton" href=<%= buttonAction %>><i class="fa fa-trash-o"></i></button>						
+    				</td>
+    			</tr>
+            </tbody>
+            <% total += topC.price * topC.quantity %>
+        <% }); %>
+		<tfoot>
+			<tr>
+				<td><a href="/" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+				<td colspan="2" class="hidden-xs"></td>
+				<td class="hidden-xs text-center"><strong>Total <%= Math.round(total*100)/100 %></strong></td>
+				<% var buyLink = '/checkout?email=' + email + '&total=' + total + '&currency=' + (typeof(items[0]) == "undefined" ? 'USD' : items[0].currency) %>
+				<td><a href=<%= buyLink %> class="btn btn-success btn-block" <% if (items == 0) { %> disabled <% } %> >Checkout <i class="fa fa-angle-right"></i></a></td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+<script type="application/javascript">
+    $('.deleteButton').on('click', function(e) {
+		e.preventDefault();
+		var buttonAction = $('.deleteButton').attr('href');
+		if (confirm('Are you sure you want to delete this item?') == true) {
+			$.post(buttonAction);
+			location.reload();
+		}
+    });
+</script>

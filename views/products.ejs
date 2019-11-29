@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <%- include header.ejs %>
+<style>
+    <%- include ../public/stylesheets/products.css %>
+</style>
+
+    <body>
+        <%- include menu.ejs %>
+        <% var settlement = 'even' %>
+        <h1><%= title %></h1>
+        <ol>
+            <% _.each(items, function(topC) { %>
+            <div class="container col-sm-6">
+                <div class="container col-sm-12">
+                    <a href="view-product/<%= topC.id %>"><h1><%= topC.name %></h1></a>
+                </div>
+                <div class="container col-sm-4">
+                    
+                    <% var index = _.findIndex(topC.image_groups, {'view_type' : 'medium'}) %>
+                    <% if (index != -1) { %>
+                        <div>
+                            <img src="/images/<%= topC.image_groups[index].images[0].link %>">
+                        </div>
+                    <% } %>
+                </div>
+                <div class="container col-sm-6">
+                    <div class="<%= settlement %>">           
+                        <p><%= topC.page_description %></p>                          
+                    </div>
+                    <div class="col-sm-8 ">
+                        <h3>Price: $ <%= topC.price %></h3>
+                    </div>
+                    <div class="col-sm-4 buttonPrice">
+                        <button type="button" class="btn btn-info" onclick="window.location.href='view-product/<%= topC.id %>'">More info</button>             
+                    </div>                     
+                    
+                </div>
+            </div>
+            <% if (settlement == 'even' ? settlement = 'odd' : settlement = 'even') %>
+            <% }); %>
+        </ol>
+    </body>
+</html>

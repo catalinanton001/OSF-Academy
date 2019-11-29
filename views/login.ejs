@@ -1,0 +1,41 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include header.ejs %>
+  </head>
+  <%- include menu.ejs %>
+  <style>
+      <%- include ../public/stylesheets/signin.css %>
+  </style>
+  
+    
+<body class="text-center">
+    
+    <form class="form-signin">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block register" type="submit">Sign in</button>
+    </form>
+    
+</body>
+<script type="application/javascript">
+    $('.register').on('click', function(e) {
+        e.preventDefault();
+        var xhttp = new XMLHttpRequest();
+        link = '/loginAccount';
+        email = '?email=' + $('#inputEmail').val();
+        pass = '&pass=' + $('#inputPassword').val();
+        xhttp.open('POST',link+email+pass);
+        xhttp.send();
+        xhttp.onload = function(e) {
+            setCookie('loggedIn', $('#inputEmail').val(), 1);
+            window.location.href = '/';
+            /* ... */
+        }   
+});
+</script>
+</html>

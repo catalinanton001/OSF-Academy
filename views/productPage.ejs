@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <%- include header.ejs %>
+    
+    <style>
+        <%- include ../public/stylesheets/productPage.css %>
+    </style>
+    <body>
+        <%- include menu.ejs %>
+        <script type="application/javascript">
+            var currencyJSON = '';
+            var currencyConvertorLink = 'https://free.currconv.com/api/v7/convert';
+	        var apiKey = '?apiKey=d78b41cb5f8c0f9dd556';
+	        var currencies = '&q=USD_RON,USD_GBP,USD_EUR';
+
+            var link = currencyConvertorLink + apiKey + currencies;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onload = function(e) {
+                document.getElementById("currency").disabled=false;
+                currencyJSON = JSON.parse(xhttp.responseText).results;
+            /* ... */
+            }
+            xhttp.open('GET',link);
+            xhttp.send();
+        </script>
+        <div class="container">
+            <div class="container col-sm-12">
+                <h1 class="name"><%= item[0].name %></h1>
+            </div>
+            <div class="container col-sm-5">
+                <% var index = _.findIndex(item[0].image_groups, {'view_type' : 'large'}) %>
+                <% if (index != -1) { %>
+                    <div>
+                        <img class="img" src="/images/<%= item[0].image_groups[index].images[0].link %>">
+                    </div>
+                <% } %>
+            </div>
+            <div class="container col-sm-7">
+                <p class="description col-sm-12"><%= item[0].page_description %></p>
+
+                <form action='/' method="get" class="buyForm">
+                    <button type="button" class="addToCart col-sm-5 btn btn-success" disabled>Buy Now</button>    
+                </form>
+                <p class="itemID" hidden><%= item[0].id %></p>
+
+                <select id="currency" class="col-sm-4 custom-select float-right" disabled>
+                    <option value="USD">USD</option>
+                    <option value="USD_EUR">EUR</option>
+                    <option value="USD_GBP">GBP</option>
+                    <option value="USD_RON">RON</option>
+                </select>
+                <h3 id="price" class="col-sm-2 float-right"><%= item[0].price %></h3>
+                
+                
+            </div>
+        </div>
+        
+    </body>
+
+    <script type="application/javascript">
+        var buyRedirectLink = '/cart?email=' + getCookie('loggedIn');
+
+        $('#currency').change(function() {
+            if (this.value == 'USD') {
+                $('#price').text(<%= item[0].price %>);
+            } else {
+                $('#price').text(Math.round(<%= item[0].price%> * currencyJSON[this.value].val * 100) / 100);
+            }
+        })
+
+        if (getCookie('loggedIn') != '') {
+            $('.addToCart').removeAttr("disabled");
+        }
+
+        $('.addToCart').on('click', function(e) {
+            e.preventDefault();
+            var cartItem = {
+                itemID     : $('.itemID').text(),
+                price      : $('#price').text(),
+                name       : $('.name').text(),
+                description: $('.description').text(),
+                img        : $('.img').attr('src'),
+                currency   : $('#currency option:selected').text(),
+                quantity   : 1,
+                customerId : getCookie('loggedIn')
+            }
+
+            var link = '/addItem?';
+            for (var key in cartItem) {
+                if (link != '/addItem?') {
+                    link += '&';
+                }
+                link += key + '=' + cartItem[key];
+
+            }
+
+            xhttp.open('POST',link);
+            xhttp.send();
+            xhttp.onload = function(e) {
+                window.location.href = buyRedirectLink;
+            } 
+        });
+    </script>
+</html>
